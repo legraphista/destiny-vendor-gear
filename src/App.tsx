@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect} from 'react';
 import './App.css';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import {BungieRequests} from "./helpers/comms";
+import {RoutingStore} from "./helpers/Routing";
+import {Auth} from "./components/auth/Auth";
+import {ShowCase} from "./components/showcase/ShowCase";
+import {ThemeProvider} from '@mui/material/styles';
+import {theme} from "./helpers/theme";
 
 function App() {
+
+  useEffect(() => {
+    if (!BungieRequests.isLoggedIn) {
+      RoutingStore.routeToLogin();
+    } else {
+      RoutingStore.routeToMain();
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <div className="App">
+        </div>
+
+        <Switch>
+          <Route exact path="/">
+            <ShowCase/>
+          </Route>
+          <Route path="/login">
+            <Auth/>
+          </Route>
+        </Switch>
+      </Router>
+    </ThemeProvider>
   );
 }
 
