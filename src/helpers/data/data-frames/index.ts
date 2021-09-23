@@ -13,6 +13,8 @@ export abstract class DataFrame<T> {
   @observable.ref
   error: Error | null = null;
 
+  keepPreviousDataWhiteFetching = true;
+
   private promise: Promise<void> | null = null;
 
   constructor(options: DataFrameOptions = {}) {
@@ -28,7 +30,6 @@ export abstract class DataFrame<T> {
   @action
   private setData(data: DataFrame<T>['data']) {
     this.data = data;
-
   }
 
   @action
@@ -45,8 +46,14 @@ export abstract class DataFrame<T> {
     this.setFetching(true);
 
     try {
+      if(!this.keepPreviousDataWhiteFetching){
+        this.setData(null);
+        console.log('set data to null for', this.constructor.name)
+      }
       this.setError(null);
       this.setData(await this.fetch());
+      console.log('set data to data for', this.constructor.name)
+
     } catch (e) {
       this.setError(e as Error);
       this.setData(null);
@@ -56,7 +63,7 @@ export abstract class DataFrame<T> {
     }
   }
 
-  get = async (update: boolean = false): Promise<T> => {
+  async get(update: boolean = false): Promise<T> {
 
     if (update || (!this.data && !this.fetching)) {
       this.promise = this.internalFetch();
@@ -71,9 +78,19 @@ export abstract class DataFrame<T> {
     return this.data!;
   }
 
-  populate = async (): Promise<this> => {
+  async populate(): Promise<this> {
     await this.get();
     return this;
   }
 
+}
+
+export abstract class CachedDataFrame<T> extends DataFrame<T> {
+  protected abstract cacheKey(): string;
+
+  async get(update: boolean = false): Promise<T> {
+    const data = await super.get(update);
+
+    return data;
+  }
 }

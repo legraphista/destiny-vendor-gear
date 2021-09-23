@@ -1,5 +1,11 @@
-import {computed, makeObservable, observable} from "mobx";
-import {CharactersDataFrame, destinyData, MembershipDataFrame, VendorsDataFrame} from "./data-frames/BungieDataFrames";
+import {computed, flow, makeObservable, observable} from "mobx";
+import {
+  CharactersDataFrame,
+  destinyData,
+  destinyManifest,
+  MembershipDataFrame,
+  VendorsDataFrame
+} from "./data-frames/BungieDataFrames";
 import {assertExists, assertTrue, objectKV, objectValues} from "../index";
 import {BungieRequests} from "../comms";
 import {
@@ -39,7 +45,7 @@ export class BungieDataClass {
   }
 
   @computed get error() {
-    return this.membership.error || this.characters?.error || this.vendors?.error || null;
+    return destinyManifest.error || destinyData.error || this.membership.error || this.characters?.error || this.vendors?.error || null;
   }
 
   @computed get canFetchVendors() {
@@ -153,21 +159,22 @@ export class BungieDataClass {
     makeObservable(this);
   }
 
-  populate = async () => {
+  populate = flow(function* populate(this: BungieDataClass) {
     assertTrue(BungieRequests.isLoggedIn, 'you have to login first');
 
-    await this.membership.populate();
+    yield this.membership.populate();
 
     const { primaryMembershipId, primaryMembershipType } = this.membership;
 
     assertExists(primaryMembershipId && primaryMembershipType);
 
-    this.characters = await new CharactersDataFrame(primaryMembershipType, primaryMembershipId).populate();
+    this.characters = new CharactersDataFrame(primaryMembershipType, primaryMembershipId);
+    yield this.characters.populate();
 
-    await destinyData.populate();
-  }
+    yield destinyData.populate();
+  })
 
-  fetchVendors = async (characterIndex: number) => {
+  fetchVendors = flow(function* fetchVendors(this: BungieDataClass, characterIndex: number, holdWhileLoading = false) {
     const character = this.characterData[characterIndex];
     assertExists(character);
 
@@ -175,8 +182,16 @@ export class BungieDataClass {
     const { characterId } = character;
     assertExists(primaryMembershipId && primaryMembershipType);
 
-    this.vendors = await new VendorsDataFrame(characterId, primaryMembershipType, primaryMembershipId).populate();
-  }
+    const vendors = new VendorsDataFrame(characterId, primaryMembershipType, primaryMembershipId);
+
+    if (holdWhileLoading) {
+      yield vendors.populate();
+      this.vendors = vendors;
+    } else {
+      this.vendors = vendors;
+      yield vendors.populate()
+    }
+  })
 }
 
 export const BungieData = new BungieDataClass();

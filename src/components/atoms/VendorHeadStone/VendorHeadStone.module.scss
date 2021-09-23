@@ -1,0 +1,34 @@
+.root {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.images {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &.background {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.text {
+  position: absolute;
+  bottom: 0px;
+  left: 4px;
+  line-height: 0;
+
+  text-shadow:
+          0 0 5px black,
+          0 0 5px black,
+          0 0 5px black,
+          0 0 5px black,
+          0 0 5px black,
+          0 0 5px black;
+}

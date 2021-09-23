@@ -1,15 +1,19 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {observer} from "mobx-react";
 import {BungieData} from "../../helpers/data/BungieData";
-import {ArmourSubTypeList, ArmourSubtypes} from "../../helpers/stats";
-import {Paper, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {StatsViewer} from "./StatViewer";
-import {BungieIcon} from "../atoms/BungieIcon";
+import {Alert, AlertTitle, CircularProgress, Paper, Typography} from "@mui/material";
+import {CharacterHeadStone} from "../atoms/CharacterHeadStone/CharacterHeadStone";
+import classes from './ShowCase.module.scss';
+import classNames from "classnames";
+import {ArmourGrid} from "./ArmourGrid";
+import {destinyData, destinyManifest} from "../../helpers/data/data-frames/BungieDataFrames";
+import {Loading} from "../atoms/Loading/Loading";
 
 export const ShowCase = observer(function ShowCase() {
 
   const [charIdx, setCharIdx] = useState(0);
-  const [error, setError] = useState<null | Error>(null);
+  const error = BungieData.error;
+  const loading = BungieData.fetching;
 
   useEffect(() => {
     BungieData.populate()
@@ -18,75 +22,75 @@ export const ShowCase = observer(function ShowCase() {
           return BungieData.fetchVendors(0);
         }
       })
-      .catch(setError);
-  }, [setError]);
+      .catch(console.error);
+  }, []);
 
-  // useEffect(() => {
-  //   if(BungieData.canFetchVendors) {
-  //     BungieData.fetchVendors(charIdx).catch(setError);
-  //   }
-  // }, [BungieData.canFetchVendors, charIdx, setError]);
+  const updateCharIndex = useCallback((index: number) => {
+    if (index === charIdx || !BungieData.canFetchVendors) return;
 
-  const data = BungieData.gridData;
+    setCharIdx(index);
+    BungieData.fetchVendors(index).catch(console.error)
+  }, [BungieData.canFetchVendors, charIdx, setCharIdx]);
+
+  const characters = BungieData.characterData;
 
   return (
-    <Paper>
-    <pre>
-      loading?: {JSON.stringify(BungieData.fetching)}<br/>
-      error?: {error?.stack ?? error?.toString()}<br/>
-      store error?: {BungieData.error?.stack}<br/>
+    <Paper className={classes.root}>
+      {error && (
+        <Alert severity="error">
+          <AlertTitle>Opps, something bad happened!</AlertTitle>
+          {error.message}
+        </Alert>
+      )}
 
-    </pre>
+      <div className={classes.characters}>
+        {characters.map((c, i) => (
+          <CharacterHeadStone
+            className={classNames(classes.character, i === charIdx && classes.selected)}
+            onClick={() => updateCharIndex(i)}
+            character={c}
+            key={c.characterId}
+          />
+        ))}
+      </div>
 
-      {data && (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>-</TableCell>
-              {
-                data.list.map(x => (
-                  <TableCell key={x.vendor.hash}>
-                    {x.vendor.displayProperties.name}
-                  </TableCell>
-                ))
-              }
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {BungieData.ArmourTypeList.map(armourType => {
-              if (!armourType) return null;
+      <ArmourGrid className={classes.dataGrid}/>
 
-              return (
-                <TableRow key={armourType.hash}>
-                  <TableCell>
-                    <BungieIcon displayProperties={armourType.displayProperties} size="small"/>
-                    {armourType.displayProperties.name}
-                  </TableCell>
+      {loading && (
+        <div className={classes.loading}>
+          <Loading />
 
-                  {data?.list.map(({ vendor, armor: armours }) => {
-                    const armour = armours[armourType.grantDestinySubType as ArmourSubtypes];
+          {destinyManifest.fetching && (
+            <Typography variant="h5">
+              Fetching Destiny 2 Manifest...
+            </Typography>
+          )}
 
-                    if (!armour) {
-                      return <TableCell>-</TableCell>;
-                    }
+          {destinyData.fetching && (
+            <Typography variant="h5">
+              Fetching Destiny 2 Data...
+            </Typography>
+          )}
 
-                    return (
-                      <TableCell key={armour.item.hash}>
-                        <StatsViewer
-                          stats={armour.stats}
-                          item={armour.item}
-                          style={{
-                            width: 200
-                          }}
-                        />
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
+          {BungieData.membership.fetching && (
+            <Typography variant="h5">
+              Fetching Destiny 2 Profile...
+            </Typography>
+          )}
+
+          {BungieData.characters?.fetching && (
+            <Typography variant="h5">
+              Fetching Destiny 2 Characters...
+            </Typography>
+          )}
+
+          {BungieData.vendors?.fetching && (
+            <Typography variant="h5">
+              Fetching Destiny 2 Vendors...
+            </Typography>
+          )}
+
+        </div>
       )}
     </Paper>
   )

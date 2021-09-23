@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.1",
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.1",
     "@testing-library/jest-dom": "^5.11.4",
@@ -18,9 +19,11 @@
     "@types/uuid": "^8.3.1",
     "babel-plugin-const-enum": "^1.1.0",
     "bungie-api-ts": "^4.11.0",
+    "classnames": "^2.3.1",
     "customize-cra": "^1.0.0",
     "mobx": "^6.3.3",
     "mobx-react": "^7.2.0",
+    "node-sass": "^6.0.1",
     "react": "^17.0.2",
     "react-app-rewired": "^2.1.8",
     "react-dom": "^17.0.2",
@@ -32,8 +35,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "HTTPS=true react-scripts start",
-    "build": "react-scripts build",
+    "start": "node fix-build.js && react-scripts start",
+    "build": "node fix-build.js && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,11 +1,35 @@
 import {DestinyDisplayPropertiesDefinition} from "bungie-api-ts/destiny2";
+import {DestinyVendorDisplayPropertiesDefinition} from "bungie-api-ts/destiny2/interfaces";
+import {ExtractKeysOfValueType} from "../../helpers";
+import React from "react";
 
-type BungieIconProps = {
-  displayProperties: DestinyDisplayPropertiesDefinition
-  size?: number | 'small' | 'large'
+type PropDefsSupport = DestinyDisplayPropertiesDefinition | DestinyVendorDisplayPropertiesDefinition
+
+
+type BungieIconCommonProps = {
+  size?: number | 'small' | 'large' | 'inherit'
+  style?: React.CSSProperties
+  className?: string
 }
 
-export function BungieIcon({ displayProperties, size = 24 }: BungieIconProps) {
+type BungieIconDisplayPropertiesProps<T extends PropDefsSupport = DestinyDisplayPropertiesDefinition> = {
+  displayProperties: T
+  variant?: ExtractKeysOfValueType<T, string>
+} & BungieIconCommonProps;
+
+type BungieIconURLProps = {
+  url: string
+  size?: number | 'small' | 'large' | 'inherit',
+} & BungieIconCommonProps
+
+
+export function BungieIcon<T extends PropDefsSupport = DestinyDisplayPropertiesDefinition>(props: BungieIconDisplayPropertiesProps<T> | BungieIconURLProps) {
+
+  const {
+    size = 24,
+    style,
+    className
+  } = props;
 
   const realSize = (
     size === 'small' ? 24 :
@@ -13,14 +37,24 @@ export function BungieIcon({ displayProperties, size = 24 }: BungieIconProps) {
         size
   );
 
+  const icon = 'url' in props ?
+    props.url :
+    props.variant ?
+      props.displayProperties[props.variant] :
+      props.displayProperties.highResIcon ?? props.displayProperties.icon;
+
   return (
     <div
       style={{
         width: realSize,
         height: realSize,
-        background: `url(https://bungie.net/${displayProperties.highResIcon ?? displayProperties.icon})`,
-        backgroundSize: 'contain'
+        backgroundImage: `url(https://www.bungie.net/${icon})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        ...style
       }}
+      className={className}
     />
   )
 }

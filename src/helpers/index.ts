@@ -22,3 +22,6 @@ export function objectValues<T extends { [s: string]: any }>(obj: T):  T[keyof T
 export function objectKV<T extends { [s: string]: any }>(obj: T): [keyof T, T[keyof T]][] {
   return Object.keys(obj).map(k => [k, obj[k]]);
 }
+
+// based on https://stackoverflow.com/questions/49796842/keyof-that-is-also-of-type-t
+export type ExtractKeysOfValueType<T, K> = { [I in keyof T]: T[I] extends K ? I : never }[keyof T];

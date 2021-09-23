@@ -27,7 +27,8 @@ export const StatsViewer = observer(function StatsViewer(props: StatViewerProps)
     <Card
       style={{
         ...props.style,
-        border: isGold ? '1px solid gold' : undefined
+        padding: 2,
+        boxShadow: isGold ? 'inset 0 0 2px 1px gold ' : undefined,
       }}
       className={props.className}
     >

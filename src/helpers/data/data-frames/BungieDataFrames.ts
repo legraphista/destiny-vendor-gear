@@ -33,6 +33,9 @@ export class DestinyDataFrame extends DataFrame<Pick<AllDestinyManifestComponent
   'DestinyInventoryItemDefinition' |
   'DestinyItemCategoryDefinition' |
   'DestinyVendorDefinition' |
+  'DestinyGenderDefinition' |
+  'DestinyClassDefinition' |
+  'DestinyRaceDefinition' |
   'DestinyStatDefinition'>> {
   protected async fetch() {
     const manifest = await destinyManifest.get();
@@ -43,6 +46,9 @@ export class DestinyDataFrame extends DataFrame<Pick<AllDestinyManifestComponent
         'DestinyInventoryItemDefinition',
         'DestinyItemCategoryDefinition',
         'DestinyVendorDefinition',
+        'DestinyGenderDefinition',
+        'DestinyClassDefinition',
+        'DestinyRaceDefinition',
         'DestinyStatDefinition'
       ]
     });

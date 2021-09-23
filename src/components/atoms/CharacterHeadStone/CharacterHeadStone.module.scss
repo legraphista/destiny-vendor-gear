@@ -1,0 +1,42 @@
+.wrapper {
+  position: relative;
+  user-select: none;
+}
+
+.ar {
+  // emblem is 474 x 96
+  padding-bottom: (96 / 474) * 100%;
+  position: relative;
+}
+
+.content {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%
+}
+
+.background {
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.class {
+  position: absolute;
+  top: 5px;
+  left: 20%;
+  height: 50%;
+}
+
+.subtext {
+  position: absolute;
+  bottom: 20%;
+  left: 20%;
+  height: 20%;
+}
