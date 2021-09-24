@@ -208,7 +208,7 @@ export class BungieDataClass {
 
     const { primaryMembershipId, primaryMembershipType } = this.membership;
 
-    assertExists(primaryMembershipId && primaryMembershipType);
+    assertExists(primaryMembershipId && primaryMembershipType, 'membership not found');
 
     this.characters = new CharactersDataFrame(primaryMembershipType, primaryMembershipId);
     yield this.characters.populate();
@@ -218,11 +218,11 @@ export class BungieDataClass {
 
   fetchVendors = flow(function* fetchVendors(this: BungieDataClass, characterIndex: number, holdWhileLoading = false) {
     const character = this.characterData[characterIndex];
-    assertExists(character);
+    assertExists(character, 'character data not found');
 
     const { primaryMembershipId, primaryMembershipType } = this.membership;
     const { characterId } = character;
-    assertExists(primaryMembershipId && primaryMembershipType);
+    assertExists(primaryMembershipId && primaryMembershipType, 'membership not found');
 
     const vendors = new VendorsDataFrame(characterId, primaryMembershipType, primaryMembershipId);
 

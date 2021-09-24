@@ -1,3 +1,5 @@
+import './helpers/sentry';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -7,7 +9,7 @@ import {toJS} from "mobx";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );

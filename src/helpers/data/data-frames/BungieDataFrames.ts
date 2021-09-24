@@ -16,7 +16,7 @@ import {getMembershipDataForCurrentUser, UserMembershipData} from "bungie-api-ts
 import {ServerResponse} from "bungie-api-ts/common";
 import {computed} from "mobx";
 import {DestinyProfileResponse} from "bungie-api-ts/destiny2/interfaces";
-import {assertExists} from "../../index";
+import {assertTrue} from "../../index";
 
 export class DestinyManifestFrame extends DataFrame<DestinyManifest> {
 
@@ -25,6 +25,8 @@ export class DestinyManifestFrame extends DataFrame<DestinyManifest> {
       url: 'https://www.bungie.net/Platform/Destiny2/Manifest/',
       method: 'GET',
     }).then(serverResponseToData);
+
+    assertTrue(!!manifest?.version, 'could not download Destiny 2 manifest');
 
     return manifest;
   }
@@ -84,8 +86,11 @@ export class MembershipDataFrame extends DataFrame<UserMembershipData> {
   protected async fetch() {
     const membership = await getMembershipDataForCurrentUser(BungieRequests.userReq).then(serverResponseToData);
 
-    assertExists(
-      membership.primaryMembershipId || membership.destinyMemberships[0]?.membershipId,
+    assertTrue(
+      (
+        membership.destinyMemberships.length > 0 &&
+        (!!membership.primaryMembershipId || !!membership.destinyMemberships[0]?.membershipId)
+      ),
       'We couldn\'t find any memberships on your account'
     );
 

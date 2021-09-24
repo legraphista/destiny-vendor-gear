@@ -34,6 +34,7 @@ export const Auth = observer(function Auth() {
   return (
     <Paper className={classes.root}>
 
+      {/* fixme standardise error messages */}
       {error && (
         <Alert severity="error" className={classes.error}>
           <AlertTitle>Oops, looks like something went wrong!</AlertTitle>
@@ -41,6 +42,7 @@ export const Auth = observer(function Auth() {
         </Alert>
       )}
 
+      {/* fixme standardise error messages */}
       {BungieData.error && (
         <Alert severity="error" className={classes.error}>
           <AlertTitle>Oops, looks like we can't connect to Bungie.net!</AlertTitle>

@@ -92,7 +92,7 @@ class BungieRequestsClass {
       throw new UnauthorizedError(this.userToken ? 'Login expired' : 'You have to login firs');
     }
 
-    assertExists(this.userToken);
+    assertExists(this.userToken, 'userToken not found when trying to make a user request');
 
     if (!config.headers) {
       config.headers = {};

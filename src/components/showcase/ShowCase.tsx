@@ -31,6 +31,7 @@ export const ShowCase = observer(function ShowCase() {
 
   return (
     <Paper className={classes.root}>
+      {/* fixme standardise error messages */}
       {error && (
         <Alert severity="error" className={classes.error}>
           <AlertTitle>Opps, something bad happened!</AlertTitle>
