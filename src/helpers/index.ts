@@ -1,4 +1,7 @@
-export function assertExists<T>(value: T | null | unknown, message: string | Error): asserts value {
+export function assertExists<T>(
+  value: Exclude<T, boolean>,
+  message: string | Error
+): asserts value {
   const check = value !== undefined && value !== null;
 
   if (!check) {
