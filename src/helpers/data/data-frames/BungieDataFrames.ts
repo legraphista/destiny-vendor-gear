@@ -3,9 +3,11 @@ import {
   BungieMembershipType,
   DestinyComponentType,
   DestinyManifest,
+  DestinyPublicVendorsResponse,
   DestinyVendorsResponse,
   getDestinyManifestSlice,
   getProfile,
+  getPublicVendors,
   getVendors
 } from "bungie-api-ts/destiny2";
 import {BungieRequests} from "../../comms";
@@ -145,3 +147,22 @@ export class VendorsDataFrame extends DataFrame<DestinyVendorsResponse> {
     }).then(serverResponseToData);
   }
 }
+
+
+export class PublicVendorsDataFrame extends DataFrame<DestinyPublicVendorsResponse> {
+  protected async fetch() {
+    return await getPublicVendors(BungieRequests.userReq, {
+      components: [
+        DestinyComponentType.Vendors,
+        DestinyComponentType.VendorSales,
+        DestinyComponentType.ItemInstances,
+        DestinyComponentType.ItemStats,
+      ]
+    }).then(serverResponseToData);
+  }
+}
+
+export const publicVendors = new PublicVendorsDataFrame({ autoFetch: false });
+
+// @ts-ignore
+window.publicVendors = publicVendors;

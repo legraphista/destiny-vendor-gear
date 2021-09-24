@@ -6,6 +6,10 @@ import {action, computed, makeObservable, observable} from "mobx";
 import {assertExists} from "./index";
 import {ServerResponse} from "bungie-api-ts/common";
 
+export class UnauthorizedError extends Error {
+  name = 'UnauthorizedError'
+}
+
 class BungieRequestsClass {
 
   @observable
@@ -43,6 +47,7 @@ class BungieRequestsClass {
       queryStrings = querystring.stringify(config.params);
     }
 
+    console.info('requesting data from', config.url);
     const ret = await fetch(config.url + (queryStrings ? '?' + queryStrings : ''), {
       method: config.method,
       body: config.body,
@@ -57,7 +62,7 @@ class BungieRequestsClass {
     if (ret.status === 401) {
       const text = await ret.text();
 
-      throw new Error(`${ret.statusText} ${ret.status} ${config.url}\n${text}`);
+      throw new UnauthorizedError(`${ret.statusText} ${ret.status} ${config.url}\n${text}`);
     }
 
     try {

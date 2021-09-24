@@ -14,7 +14,7 @@ import {
   DestinyItemType,
   DestinyStatAggregationType,
   DestinyStatCategory,
-  DestinyVendorDefinition
+  DestinyVendorDefinition, DestinyVendorSaleItemComponent
 } from "bungie-api-ts/destiny2";
 import {ArmourSubTypeList, ArmourSubtypes, sortArmourStatsByHashes} from "../stats";
 import {DestinyItemSubType} from "bungie-api-ts/destiny2/interfaces";
@@ -98,6 +98,7 @@ export class BungieDataClass {
         [s in ArmourSubtypes]?: {
           item: DestinyInventoryItemDefinition,
           stats: { [hash: number]: number }
+          saleItem: DestinyVendorSaleItemComponent
         }
       }
     }[] = [];
@@ -134,7 +135,8 @@ export class BungieDataClass {
 
         vendorData.armor[item.itemSubType as ArmourSubtypes] = {
           item,
-          stats: {}
+          stats: {},
+          saleItem: saleItem,
         }
         const armourStats = vendorData.armor[item.itemSubType as ArmourSubtypes]!;
 
@@ -151,7 +153,6 @@ export class BungieDataClass {
       list.push(vendorData);
     }
 
-    console.log('computed max stats')
     return { list, maxStats };
   }
 

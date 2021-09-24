@@ -19,9 +19,7 @@ export const ArmourGrid = observer(function ArmourGrid(props: ArmourGridProps) {
 
   return (
     <div className={classNames(classes.root, className)}>
-      <Table
-        // className={classes.table}
-        >
+      <Table>
         {/* head */}
         <TableHead
           // className={classNames(classes.row, classes.header)}
@@ -30,7 +28,6 @@ export const ArmourGrid = observer(function ArmourGrid(props: ArmourGridProps) {
             {
               data.list.map(x => (
                 <TableCell
-                  // className={classes.cell}
                   key={x.vendor.hash}
                   width={100 / data.list.length + '%'}
                 >
@@ -55,19 +52,39 @@ export const ArmourGrid = observer(function ArmourGrid(props: ArmourGridProps) {
                 {data.list.map(({ vendor, armor: armours }, i) => {
                   const armour = armours[armourType.grantDestinySubType as ArmourSubtypes];
 
+                  if (!armour) {
+                    return (
+                      <TableCell
+                        key={i}
+                        width={100 / data.list.length + '%'}
+                      >-</TableCell>
+                    )
+                  }
+
+                  const cantBuy = armour.saleItem.failureIndexes.length > 0;
+
+                  const cantBuyReason = cantBuy && vendor.failureStrings[armour.saleItem.failureIndexes[0]]
+
                   return (
+
                     <TableCell
-                      key={armour?.item.hash ?? i}
-                      // className={classes.cell}
+                      key={armour.item.hash}
                       width={100 / data.list.length + '%'}
+                      className={classNames(
+                        cantBuy && classes.cantBuy
+                      )}
                     >
-                      {armour && (
-                        <StatsViewer
-                          stats={armour.stats}
-                          item={armour.item}
-                        />
+                      <StatsViewer
+                        stats={armour.stats}
+                        item={armour.item}
+                      />
+                      {cantBuy && (
+                        <div className={classes.cantBuyReason}>
+                          {cantBuyReason}
+                        </div>
                       )}
                     </TableCell>
+
                   );
                 })}
               </TableRow>

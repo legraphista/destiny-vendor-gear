@@ -48,12 +48,9 @@ export abstract class DataFrame<T> {
     try {
       if(!this.keepPreviousDataWhiteFetching){
         this.setData(null);
-        console.log('set data to null for', this.constructor.name)
       }
       this.setError(null);
       this.setData(await this.fetch());
-      console.log('set data to data for', this.constructor.name)
-
     } catch (e) {
       this.setError(e as Error);
       this.setData(null);
