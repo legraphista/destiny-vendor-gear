@@ -1,10 +1,11 @@
 import {DestinyDisplayPropertiesDefinition} from "bungie-api-ts/destiny2";
 import {DestinyVendorDisplayPropertiesDefinition} from "bungie-api-ts/destiny2/interfaces";
-import {ExtractKeysOfValueType} from "../../helpers";
+import {ExtractKeysOfValueType} from "../../../helpers";
 import React from "react";
+import classes from './BungieIcon.module.scss';
+import classNames from "classnames";
 
 type PropDefsSupport = DestinyDisplayPropertiesDefinition | DestinyVendorDisplayPropertiesDefinition
-
 
 type BungieIconCommonProps = {
   size?: number | 'small' | 'large' | 'inherit'
@@ -51,13 +52,9 @@ export function BungieIcon<T extends PropDefsSupport = DestinyDisplayPropertiesD
         width: realSize,
         height: realSize,
         backgroundImage: `url(https://www.bungie.net/${icon})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        position: 'relative',
         ...style
       }}
-      className={className}
+      className={classNames(className, classes.root)}
     >
       {props.children}
     </div>

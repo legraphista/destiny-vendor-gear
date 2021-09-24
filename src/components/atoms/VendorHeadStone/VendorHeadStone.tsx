@@ -1,6 +1,6 @@
 import React from 'react'
 import {DestinyVendorDefinition} from "bungie-api-ts/destiny2";
-import {BungieIcon} from "../BungieIcon";
+import {BungieIcon} from "../BungieIcon/BungieIcon";
 import {Typography} from "@mui/material";
 import classes from './VendorHeadStone.module.scss';
 import classNames from "classnames";
@@ -23,10 +23,7 @@ export function VendorHeadStone({
         displayProperties={vendor.displayProperties}
         size="large"
         variant="smallTransparentIcon"
-        className={classes.images}
-        style={{
-          transform: 'translate(-20%,-20%)'
-        }}
+        className={classNames(classes.images, classes.icon)}
       />
       <Typography
         className={classes.text}

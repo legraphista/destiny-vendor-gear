@@ -1,6 +1,6 @@
 import React from 'react'
 import {observer} from "mobx-react";
-import {BungieIcon} from "../atoms/BungieIcon";
+import {BungieIcon} from "../atoms/BungieIcon/BungieIcon";
 import {BungieData} from "../../helpers/data/BungieData";
 import classes from './Spider.module.scss';
 import {Typography} from "@mui/material";

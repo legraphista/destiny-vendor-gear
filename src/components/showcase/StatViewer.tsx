@@ -3,7 +3,7 @@ import {observer} from "mobx-react";
 import {DestinyInventoryItemDefinition} from "bungie-api-ts/destiny2";
 import {Card, CardContent, CardHeader, List, ListItem, ListItemIcon, ListItemText, Tooltip} from "@mui/material";
 import {BungieData} from "../../helpers/data/BungieData";
-import {BungieIcon} from "../atoms/BungieIcon";
+import {BungieIcon} from "../atoms/BungieIcon/BungieIcon";
 import {StatLine} from "../atoms/StatLine";
 import {objectValues} from "../../helpers";
 

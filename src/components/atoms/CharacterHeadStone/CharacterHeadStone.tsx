@@ -3,7 +3,7 @@ import {observer} from "mobx-react";
 import {DestinyCharacterComponent} from "bungie-api-ts/destiny2";
 import classNames from "classnames";
 import classes from './CharacterHeadStone.module.scss';
-import {BungieIcon} from "../BungieIcon";
+import {BungieIcon} from "../BungieIcon/BungieIcon";
 import {BungieData} from "../../../helpers/data/BungieData";
 
 type CharacterHeadStoneProps = {

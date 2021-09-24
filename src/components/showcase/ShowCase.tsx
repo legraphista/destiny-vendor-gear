@@ -9,7 +9,7 @@ import {Loading} from "../atoms/Loading/Loading";
 import {CharactersSelector} from "../atoms/CharactersSelector/CharactersSelector";
 import {AppState} from "../../helpers/AppState";
 import Shield from "@mui/icons-material/Shield";
-import {BungieIcon} from "../atoms/BungieIcon";
+import {BungieIcon} from "../atoms/BungieIcon/BungieIcon";
 import Store from "@mui/icons-material/Store";
 import classNames from "classnames";
 import {Spider} from "./Spider";
