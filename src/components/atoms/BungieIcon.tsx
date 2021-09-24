@@ -10,6 +10,7 @@ type BungieIconCommonProps = {
   size?: number | 'small' | 'large' | 'inherit'
   style?: React.CSSProperties
   className?: string
+  children?: React.ReactNode
 }
 
 type BungieIconDisplayPropertiesProps<T extends PropDefsSupport = DestinyDisplayPropertiesDefinition> = {
@@ -32,9 +33,10 @@ export function BungieIcon<T extends PropDefsSupport = DestinyDisplayPropertiesD
   } = props;
 
   const realSize = (
-    size === 'small' ? 24 :
-      size === 'large' ? 48 :
-        size
+    size === 'inherit' ? undefined :
+      size === 'small' ? 24 :
+        size === 'large' ? 48 :
+          size
   );
 
   const icon = 'url' in props ?
@@ -52,9 +54,12 @@ export function BungieIcon<T extends PropDefsSupport = DestinyDisplayPropertiesD
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
+        position: 'relative',
         ...style
       }}
       className={className}
-    />
+    >
+      {props.children}
+    </div>
   )
 }

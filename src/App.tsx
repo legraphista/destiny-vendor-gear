@@ -21,8 +21,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <div className="App">
-        </div>
 
         <Switch>
           <Route exact path="/">

@@ -163,11 +163,20 @@ export class BungieDataClass {
   @computed get spider() {
     if (!this.vendors?.data) return null;
 
+    const { DestinyVendorDefinition } = this.destiny ?? {};
+    if (!DestinyVendorDefinition) return null;
+
+    return objectValues(DestinyVendorDefinition)
+      .find(x => x.vendorIdentifier === "TANGLED_SHORE_SPIDER");
+  }
+
+  @computed get spiderSells() {
+    if (!this.vendors?.data) return null;
+
     const { DestinyVendorDefinition, DestinyInventoryItemDefinition } = this.destiny ?? {};
     if (!DestinyVendorDefinition || !DestinyInventoryItemDefinition) return null;
 
-    const spider = objectValues(DestinyVendorDefinition)
-      .find(x => x.vendorIdentifier === "TANGLED_SHORE_SPIDER");
+    const spider = this.spider;
     assertExists(spider, 'Couldn\'t find Spider in the API');
 
     const spiderSales = this.vendors.data.sales.data?.[spider.hash]?.saleItems;
@@ -179,7 +188,7 @@ export class BungieDataClass {
         item: DestinyInventoryItemDefinition[sale.itemHash],
         costItems: sale.costs.map(cost => DestinyInventoryItemDefinition[cost.itemHash])
       }
-    });
+    })
   }
 
   constructor() {
@@ -189,7 +198,7 @@ export class BungieDataClass {
       () => this.characterIndex,
       // todo add proper erroring here
       (idx) => this.fetchVendors(idx).catch(console.error)
-      )
+    )
   }
 
   populate = flow(function* populate(this: BungieDataClass) {

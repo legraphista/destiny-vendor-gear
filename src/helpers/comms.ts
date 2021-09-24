@@ -72,7 +72,7 @@ class BungieRequestsClass {
       if (data.ErrorCode > 1) {
         throw new Error(
           data.ErrorStatus + '\n' +
-          data.MessageData + '\n' +
+          data.Message + '\n' +
           JSON.stringify(data.MessageData)
         );
       }

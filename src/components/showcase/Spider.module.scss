@@ -1,0 +1,137 @@
+.root {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-flow: column;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.header {
+  width: 100%;
+  height: 300px;
+  z-index: 0;
+  position: relative;
+  flex-shrink: 0;
+
+  .image, .gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
+    filter: blur(4px);
+  }
+
+  .gradient {
+    background: linear-gradient(0deg, #1e1e1e 0%, rgba(0, 0, 0, 0) 100%);
+    transform: translateY(+5px);
+  }
+
+  .text {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+
+    .name {
+      opacity: 0.8;
+    }
+
+    .subName {
+      opacity: 0.7;
+    }
+  }
+}
+
+$content-breakpoint: 1110px;
+
+.content {
+  flex-shrink: 1;
+  overflow: auto;
+  position: relative;
+  z-index: 1;
+  height: 100%;
+
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  .list {
+    display: flex;
+    justify-content: left;
+    max-width: 1200px;
+    flex-wrap: wrap;
+    align-self: center;
+
+    .transaction {
+      display: flex;
+      flex-flow: column;
+      position: relative;
+      align-items: center;
+      margin: 16px 4px;
+
+      justify-content: space-between;
+      //width: 200px;
+      //min-width: 150px;
+      text-wrap: normal;
+      text-align: center;
+
+      width: 150px;
+      @media only screen and (max-width: $content-breakpoint) {
+        width: 100px;
+      }
+
+      .arrow {
+        font-size: 3em;
+      }
+
+      .item {
+        position: relative;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        @media only screen and (max-width: $content-breakpoint) {
+          height: 110px;
+        }
+
+        &.cost {
+        }
+        &.receive{
+        }
+      }
+
+      .itemImage {
+        width: 96px;
+        height: 96px;
+        border-radius: 8px;
+
+        @media only screen and (max-width: $content-breakpoint) {
+          width: 64px;
+          height: 64px;
+        }
+      }
+
+      .itemQuantity {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5em;
+        text-shadow: 0 0 5px black,
+        0 0 5px black,
+        0 0 5px black,
+        0 0 5px black;
+      }
+    }
+  }
+}

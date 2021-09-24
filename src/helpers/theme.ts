@@ -1,10 +1,13 @@
 import {createTheme} from "@mui/material/styles";
 
 export const theme = createTheme({
+  typography: {
+    fontFamily: "'Jost', sans-serif"
+  },
   palette: {
     mode: 'dark',
     primary: {
-      main: '#3f51b5',
+      main: '#fdcd47',
     },
     secondary: {
       main: '#f50057',
@@ -12,7 +15,7 @@ export const theme = createTheme({
     background: {
       // default: 'rgb(32,0,73)',
       // paper: 'rgb(44,0,98)'
-    }
+    },
   },
   components: {
     MuiTableCell: {
@@ -47,6 +50,20 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           minWidth: 0
+        }
+      }
+    },
+    MuiAlert: {
+      styleOverrides: {
+        message: {
+          whiteSpace: 'pre-wrap'
+        }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '1em'
         }
       }
     }

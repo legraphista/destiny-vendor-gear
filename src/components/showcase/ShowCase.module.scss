@@ -5,20 +5,18 @@
 
   width: 100vw;
   height: 100vh;
-  //width: 90vw;
-  //max-width: 1366px;
 
   display: flex;
   flex-flow: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 
-  > * {
-    min-width: 1000px;
-    max-width: 1600px;
-  }
 }
 
+.restrictedWidth {
+  min-width: 1000px;
+  max-width: 1600px;
+}
 
 
 .dataGrid {
@@ -36,6 +34,28 @@
   align-items: center;
 
   > * {
-    margin-top: 8px!important;
+    margin-top: 8px !important;
   }
+}
+
+.tabs {
+  z-index: 2;
+  flex-shrink: 0;
+
+  & button {
+    text-shadow: 0 0 5px black,
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black;
+
+    & > svg, & > img, & > div {
+      filter: drop-shadow(0px 0px 2px #1e1e1e);
+    }
+  }
+
+}
+
+.error {
+  width: 100%;
+  margin: 0 auto;
 }
