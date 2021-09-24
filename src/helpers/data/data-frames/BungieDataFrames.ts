@@ -139,7 +139,7 @@ export class VendorsDataFrame extends DataFrame<DestinyVendorsResponse> {
       membershipType,
       destinyMembershipId: membershipId,
       components: [
-        // DestinyComponentType.Vendors,
+        DestinyComponentType.Vendors,
         DestinyComponentType.VendorSales,
         DestinyComponentType.ItemInstances,
         DestinyComponentType.ItemStats,

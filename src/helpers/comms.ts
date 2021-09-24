@@ -5,6 +5,7 @@ import {UserTokensWithTimestamp} from "../components/auth/types";
 import {action, computed, makeObservable, observable} from "mobx";
 import {assertExists} from "./index";
 import {ServerResponse} from "bungie-api-ts/common";
+import {RoutingStore} from "./Routing";
 
 export class UnauthorizedError extends Error {
   name = 'UnauthorizedError'
@@ -47,7 +48,7 @@ class BungieRequestsClass {
       queryStrings = querystring.stringify(config.params);
     }
 
-    console.info('requesting data from', config.url);
+    console.debug('requesting data from', config.url);
     const ret = await fetch(config.url + (queryStrings ? '?' + queryStrings : ''), {
       method: config.method,
       body: config.body,
@@ -85,9 +86,13 @@ class BungieRequestsClass {
   }
 
   userReq = async <T>(config: Parameters<BungieRequestsClass['req']>[0]) => {
-    assertExists(this.userToken);
 
-    // todo add token refresh
+    if (!this.isLoggedIn) {
+      RoutingStore.routeToLogin();
+      throw new UnauthorizedError(this.userToken ? 'Login expired' : 'You have to login firs');
+    }
+
+    assertExists(this.userToken);
 
     if (!config.headers) {
       config.headers = {};

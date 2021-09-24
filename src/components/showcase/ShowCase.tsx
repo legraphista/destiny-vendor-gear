@@ -8,10 +8,10 @@ import classNames from "classnames";
 import {ArmourGrid} from "./ArmourGrid";
 import {destinyData, destinyManifest} from "../../helpers/data/data-frames/BungieDataFrames";
 import {Loading} from "../atoms/Loading/Loading";
+import {CharactersSelector} from "../atoms/CharactersSelector/CharactersSelector";
 
 export const ShowCase = observer(function ShowCase() {
 
-  const [charIdx, setCharIdx] = useState(0);
   const error = BungieData.error;
   const loading = BungieData.fetching;
 
@@ -25,15 +25,6 @@ export const ShowCase = observer(function ShowCase() {
       .catch(console.error);
   }, []);
 
-  const updateCharIndex = useCallback((index: number) => {
-    if (index === charIdx || !BungieData.canFetchVendors) return;
-
-    setCharIdx(index);
-    BungieData.fetchVendors(index).catch(console.error)
-  }, [BungieData.canFetchVendors, charIdx, setCharIdx]);
-
-  const characters = BungieData.characterData;
-
   return (
     <Paper className={classes.root}>
       {error && (
@@ -43,17 +34,7 @@ export const ShowCase = observer(function ShowCase() {
         </Alert>
       )}
 
-      <div className={classes.characters}>
-        {characters.map((c, i) => (
-          <CharacterHeadStone
-            className={classNames(classes.character, i === charIdx && classes.selected)}
-            onClick={() => updateCharIndex(i)}
-            character={c}
-            key={c.characterId}
-          />
-        ))}
-      </div>
-
+      <CharactersSelector/>
       <ArmourGrid className={classes.dataGrid}/>
 
       {loading && (

@@ -1,4 +1,4 @@
-import {computed, flow, makeObservable, observable} from "mobx";
+import {action, computed, flow, makeObservable, observable, reaction} from "mobx";
 import {
   CharactersDataFrame,
   destinyData,
@@ -14,7 +14,8 @@ import {
   DestinyItemType,
   DestinyStatAggregationType,
   DestinyStatCategory,
-  DestinyVendorDefinition, DestinyVendorSaleItemComponent
+  DestinyVendorDefinition,
+  DestinyVendorSaleItemComponent
 } from "bungie-api-ts/destiny2";
 import {ArmourSubTypeList, ArmourSubtypes, sortArmourStatsByHashes} from "../stats";
 import {DestinyItemSubType} from "bungie-api-ts/destiny2/interfaces";
@@ -30,6 +31,9 @@ export class BungieDataClass {
   characters: CharactersDataFrame | null = null;
   @observable.ref
   vendors: VendorsDataFrame | null = null;
+
+  @observable
+  characterIndex = 0;
 
   @computed get characterData() {
     const data = this.characters?.data?.characters.data ?? {};
@@ -156,8 +160,36 @@ export class BungieDataClass {
     return { list, maxStats };
   }
 
+  @computed get spider() {
+    if (!this.vendors?.data) return null;
+
+    const { DestinyVendorDefinition, DestinyInventoryItemDefinition } = this.destiny ?? {};
+    if (!DestinyVendorDefinition || !DestinyInventoryItemDefinition) return null;
+
+    const spider = objectValues(DestinyVendorDefinition)
+      .find(x => x.vendorIdentifier === "TANGLED_SHORE_SPIDER");
+    assertExists(spider, 'Couldn\'t find Spider in the API');
+
+    const spiderSales = this.vendors.data.sales.data?.[spider.hash]?.saleItems;
+    assertExists(spiderSales, 'Couldn\'t find Spider\'s items to sell in the API');
+
+    return objectValues(spiderSales).map(sale => {
+      return {
+        sale,
+        item: DestinyInventoryItemDefinition[sale.itemHash],
+        costItems: sale.costs.map(cost => DestinyInventoryItemDefinition[cost.itemHash])
+      }
+    });
+  }
+
   constructor() {
     makeObservable(this);
+
+    reaction(
+      () => this.characterIndex,
+      // todo add proper erroring here
+      (idx) => this.fetchVendors(idx).catch(console.error)
+      )
   }
 
   populate = flow(function* populate(this: BungieDataClass) {
@@ -192,7 +224,12 @@ export class BungieDataClass {
       this.vendors = vendors;
       yield vendors.populate()
     }
-  })
+  });
+
+  @action
+  setCharacterIndex(index: number) {
+    this.characterIndex = index;
+  }
 }
 
 export const BungieData = new BungieDataClass();
