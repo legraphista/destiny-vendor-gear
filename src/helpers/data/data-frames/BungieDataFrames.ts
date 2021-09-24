@@ -14,6 +14,7 @@ import {getMembershipDataForCurrentUser, UserMembershipData} from "bungie-api-ts
 import {ServerResponse} from "bungie-api-ts/common";
 import {computed} from "mobx";
 import {DestinyProfileResponse} from "bungie-api-ts/destiny2/interfaces";
+import {assertExists} from "../../index";
 
 export class DestinyManifestFrame extends DataFrame<DestinyManifest> {
 
@@ -67,7 +68,7 @@ function serverResponseToData<T>(resp: ServerResponse<T>): T {
 export class MembershipDataFrame extends DataFrame<UserMembershipData> {
 
   @computed get primaryMembershipId() {
-    return this.data?.primaryMembershipId;
+    return this.data?.primaryMembershipId || this.data?.destinyMemberships[0]?.membershipId;
   }
 
   @computed get primaryMembership() {
@@ -75,11 +76,18 @@ export class MembershipDataFrame extends DataFrame<UserMembershipData> {
   }
 
   @computed get primaryMembershipType() {
-    return this.data?.destinyMemberships.find(x => x.membershipId === this.primaryMembershipId)?.membershipType;
+    return this.primaryMembership?.membershipType;
   }
 
   protected async fetch() {
-    return await getMembershipDataForCurrentUser(BungieRequests.userReq).then(serverResponseToData);
+    const membership = await getMembershipDataForCurrentUser(BungieRequests.userReq).then(serverResponseToData);
+
+    assertExists(
+      membership.primaryMembershipId || membership.destinyMemberships[0]?.membershipId,
+      'We couldn\'t find any memberships on your account'
+    );
+
+    return membership;
   }
 }
 

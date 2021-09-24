@@ -160,7 +160,7 @@ export class BungieDataClass {
   }
 
   populate = flow(function* populate(this: BungieDataClass) {
-    assertTrue(BungieRequests.isLoggedIn, 'you have to login first');
+    assertTrue(BungieRequests.isLoggedIn, 'You have to login first');
 
     yield this.membership.populate();
 
