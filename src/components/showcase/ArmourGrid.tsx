@@ -19,7 +19,7 @@ export const ArmourGrid = observer(function ArmourGrid(props: ArmourGridProps) {
 
   return (
     <div className={classNames(classes.root, className)}>
-      <Table>
+      <Table className={classes.table}>
         {/* head */}
         <TableHead
           // className={classNames(classes.row, classes.header)}
