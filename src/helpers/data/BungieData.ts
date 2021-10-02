@@ -186,9 +186,19 @@ export class BungieDataClass {
       return {
         sale,
         item: DestinyInventoryItemDefinition[sale.itemHash],
+        inventorySaleItemCounterpart: DestinyInventoryItemDefinition?.[SpiderPurchaseCurrencyToInventoryItems?.[sale.itemHash]] ?? null,
         costItems: sale.costs.map(cost => DestinyInventoryItemDefinition[cost.itemHash])
       }
     })
+  }
+
+  @computed get characterCurrencies() {
+    const characters = this.characterData;
+    const currentCharacter = characters[this.characterIndex];
+
+    const currencies = this.characters?.data?.characterCurrencyLookups?.data?.[currentCharacter.characterId];
+
+    return currencies?.itemQuantities || {};
   }
 
   constructor() {
@@ -245,3 +255,37 @@ export const BungieData = new BungieDataClass();
 
 //@ts-ignore
 window.BungieData = BungieData;
+
+
+export const SpiderPurchaseCurrencyToInventoryItems: { [s: number]: number } = {
+  // Purchase Baryon Boughs
+  778553120: 592227263,
+  // Purchase Phaseglass
+  924468777: 1305274547,
+  // Purchase Simulation Seeds
+  1420498062: 49145143,
+  // Purchase Glacial Starwort
+  1760701414: 1485756901,
+  // Purchase Enhancement Cores
+  1812969468: 3853748946,
+  // Purchase Datalattice
+  1845310989: 3487922223,
+  // Purchase Helium Filaments
+  1923884703: 3592324052,
+  // Purchase Seraphite
+  2536947844: 31293053,
+  // Purchase Legendary Shards
+  2654422615: 1022552290,
+  // Purchase Enhancement Prisms
+  3106913645: 4257549984,
+  // Purchase Etheric Spiral
+  3245502278: 1177810185,
+  // Purchase Glimmer
+  3664001560: 3159615086, // there are more types of glimmer
+  // Purchase Dusklight Shards
+  3721881826: 950899352,
+  // Purchase Spinmetal Leaves
+  4106973372: 293622383,
+  // Purchase Alkane Dust
+  4153440841: 2014411539,
+}

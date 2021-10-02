@@ -105,8 +105,10 @@ $content-breakpoint: 1110px;
         }
 
         &.cost {
+          height: 150px;
         }
         &.receive{
+          height: 160px;
         }
       }
 
@@ -114,6 +116,7 @@ $content-breakpoint: 1110px;
         width: 96px;
         height: 96px;
         border-radius: 8px;
+        margin-top: auto;
 
         @media only screen and (max-width: $content-breakpoint) {
           width: 64px;

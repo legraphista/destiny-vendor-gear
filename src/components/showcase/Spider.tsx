@@ -10,7 +10,7 @@ import ArrowDownward from "@mui/icons-material/ArrowDownward";
 
 export const Spider = observer(function Spider() {
 
-  const { spider, spiderSells } = BungieData;
+  const { spider, spiderSells, characterCurrencies } = BungieData;
   if (!spider || !spiderSells) return null;
 
   const consummables = spiderSells.filter(x => x.item.itemType === DestinyItemType.Dummy);
@@ -46,6 +46,8 @@ export const Spider = observer(function Spider() {
               >
                 <div className={classNames(classes.item, classes.cost)}>
                   {x.costItems[0].displayProperties.name}
+                  <br/>
+                  {characterCurrencies[x.costItems[0].hash]}
 
                   <BungieIcon
                     displayProperties={x.costItems[0].displayProperties}
@@ -68,10 +70,14 @@ export const Spider = observer(function Spider() {
                 />
 
                 <div className={classNames(classes.item, classes.receive)}>
-                  {x.item.displayProperties.name.replace(/Purchase/i, '')}
+                  {x.inventorySaleItemCounterpart ? (
+                    x.inventorySaleItemCounterpart.displayProperties.name
+                  ) : (
+                    x.item.displayProperties.name.replace(/Purchase/i, '')
+                  )}
 
                   <BungieIcon
-                    displayProperties={x.item.displayProperties}
+                    displayProperties={x.inventorySaleItemCounterpart?.displayProperties || x.item.displayProperties}
                     className={classes.itemImage}
                     size="inherit"
                   >
@@ -83,6 +89,10 @@ export const Spider = observer(function Spider() {
                       }
                     </div>
                   </BungieIcon>
+
+                  {x.inventorySaleItemCounterpart && (
+                    characterCurrencies[x.inventorySaleItemCounterpart.hash]
+                  )}
                 </div>
               </div>
             )

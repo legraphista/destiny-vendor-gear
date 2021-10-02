@@ -116,7 +116,10 @@ export class CharactersDataFrame extends DataFrame<DestinyProfileResponse> {
     return await getProfile(BungieRequests.userReq, {
       membershipType,
       destinyMembershipId: membershipId,
-      components: [DestinyComponentType.Characters]
+      components: [
+        DestinyComponentType.Characters,
+        DestinyComponentType.CurrencyLookups,
+      ]
     }).then(serverResponseToData);
   }
 }
