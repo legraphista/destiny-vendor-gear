@@ -6,6 +6,7 @@ import {action, computed, makeObservable, observable} from "mobx";
 import {assertExists} from "./index";
 import {ServerResponse} from "bungie-api-ts/common";
 import {RoutingStore} from "./Routing";
+import {name as appName} from '../../package.json';
 
 export class UnauthorizedError extends Error {
   name = 'UnauthorizedError'
@@ -39,6 +40,7 @@ class BungieRequestsClass {
   req = async <T>(config: HttpClientConfig & { headers?: { [s: string]: string | undefined }, noApiKey?: boolean }) => {
 
     let queryStrings = '';
+
     if (config.params) {
       Object.keys(config.params).forEach(k => {
         if (config.params[k] === undefined) {
@@ -54,7 +56,7 @@ class BungieRequestsClass {
       body: config.body,
       mode: "cors",
       headers: {
-        ...(config.noApiKey ? {} : { 'X-API-Key': API_TOKEN }),
+        ...(config.noApiKey ? {} : {'X-API-Key': API_TOKEN}),
         ...config.headers
       }
     });
@@ -105,6 +107,12 @@ class BungieRequestsClass {
   noApiKeyReq = async <T>(config: Parameters<BungieRequestsClass['req']>[0]) => {
     config.noApiKey = true;
     return this.req<T>(config);
+  }
+
+  noApiKeyReqWithCacheBusting = async <T>(config: Parameters<BungieRequestsClass['req']>[0]) => {
+    if (!config.params) config.params = {};
+    config.params.cachebusting = appName;
+    return this.noApiKeyReq<T>(config);
   }
 }
 

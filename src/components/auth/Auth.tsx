@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
 import Button from '@mui/material/Button';
-import {beginAuthProcess, finishAuthProcess} from "./auth";
+import {beginAuthProcess, finishAuthProcess} from "./auth-logic";
 import {Alert, AlertTitle, Link, Paper, Typography} from "@mui/material";
 import {BungieRequests} from "../../helpers/comms";
 import {observer} from "mobx-react";

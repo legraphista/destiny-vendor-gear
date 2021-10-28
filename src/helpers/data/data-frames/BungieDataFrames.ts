@@ -44,7 +44,7 @@ export class DestinyDataFrame extends DataFrame<Pick<AllDestinyManifestComponent
   'DestinyStatDefinition'>> {
   protected async fetch() {
     const manifest = await destinyManifest.get();
-    return await getDestinyManifestSlice(BungieRequests.noApiKeyReq, {
+    return await getDestinyManifestSlice(BungieRequests.noApiKeyReqWithCacheBusting, {
       destinyManifest: manifest,
       language: "en",
       tableNames: [
